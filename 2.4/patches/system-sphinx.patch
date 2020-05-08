@@ -1,0 +1,19 @@
+spec:
+  paused: true
+  template:
+    spec:
+      containers:
+      - name: system-sphinx
+        env:
+        - name: RAILS_ENV
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: RAILS_ENV
+              name: system-environment
+        - name: DATABASE_URL
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: URL
+              name: system-database

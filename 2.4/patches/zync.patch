@@ -1,0 +1,25 @@
+spec:
+  paused: true
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        3scale.component: zync
+        app: 3scale-api-management
+        deploymentConfig: zync
+    spec:
+      initContainers:
+      - name: zync-db-svc
+        command:
+        - bash
+        - -c
+        - bundle exec sh -c "until rake boot:db; do sleep $SLEEP_SECONDS; done"
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              key: DATABASE_URL
+              name: zync
+        

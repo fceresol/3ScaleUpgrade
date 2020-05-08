@@ -1,0 +1,837 @@
+spec:
+  paused: true
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      pre:
+        execNewPod:
+          env:
+          - name: AMP_RELEASE
+            value: null
+            valueFrom:
+              configMapKeyRef:
+                key: AMP_RELEASE
+                name: system-environment
+          - name: APICAST_REGISTRY_URL
+            value: null
+            valueFrom:
+              configMapKeyRef:
+                key: APICAST_REGISTRY_URL
+                name: system-environment
+          - name: FORCE_SSL
+            value: null
+            valueFrom:
+              configMapKeyRef:
+                key: FORCE_SSL
+                name: system-environment
+          - name: PROVIDER_PLAN
+            value: null
+            valueFrom:
+              configMapKeyRef:
+                key: PROVIDER_PLAN
+                name: system-environment
+          - name: RAILS_ENV
+            value: null
+            valueFrom:
+              configMapKeyRef:
+                key: RAILS_ENV
+                name: system-environment
+          - name: RAILS_LOG_LEVEL
+            value: null
+            valueFrom:
+              configMapKeyRef:
+                key: RAILS_LOG_LEVEL
+                name: system-environment
+          - name: RAILS_LOG_TO_STDOUT
+            value: null
+            valueFrom:
+              configMapKeyRef:
+                key: RAILS_LOG_TO_STDOUT
+                name: system-environment
+          - name: SSL_CERT_DIR
+            value: null
+            valueFrom:
+              configMapKeyRef:
+                key: SSL_CERT_DIR
+                name: system-environment
+          - name: THINKING_SPHINX_PORT
+            value: null
+            valueFrom:
+              configMapKeyRef:
+                key: THINKING_SPHINX_PORT
+                name: system-environment
+          - name: THREESCALE_SANDBOX_PROXY_OPENSSL_VERIFY_MODE
+            value: null
+            valueFrom:
+              configMapKeyRef:
+                key: THREESCALE_SANDBOX_PROXY_OPENSSL_VERIFY_MODE
+                name: system-environment
+          - name: THREESCALE_SUPERDOMAIN
+            value: null
+            valueFrom:
+              configMapKeyRef:
+                key: THREESCALE_SUPERDOMAIN
+                name: system-environment
+          - name: DATABASE_URL
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: URL
+                name: system-database
+          - name: MASTER_DOMAIN
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: MASTER_DOMAIN
+                name: system-seed
+          - name: MASTER_USER
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: MASTER_USER
+                name: system-seed
+          - name: MASTER_PASSWORD
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: MASTER_PASSWORD
+                name: system-seed
+          - name: ADMIN_ACCESS_TOKEN
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: ADMIN_ACCESS_TOKEN
+                name: system-seed
+          - name: USER_LOGIN
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: ADMIN_USER
+                name: system-seed
+          - name: USER_PASSWORD
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: ADMIN_PASSWORD
+                name: system-seed
+          - name: TENANT_NAME
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: TENANT_NAME
+                name: system-seed
+          - name: THINKING_SPHINX_ADDRESS
+            value: system-sphinx
+          - name: THINKING_SPHINX_CONFIGURATION_FILE
+            value: /tmp/sphinx.conf
+          - name: EVENTS_SHARED_SECRET
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: PASSWORD
+                name: system-events-hook
+          - name: RECAPTCHA_PUBLIC_KEY
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: PUBLIC_KEY
+                name: system-recaptcha
+          - name: RECAPTCHA_PRIVATE_KEY
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: PRIVATE_KEY
+                name: system-recaptcha
+          - name: SECRET_KEY_BASE
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: SECRET_KEY_BASE
+                name: system-app
+          - name: REDIS_URL
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: URL
+                name: system-redis
+          - name: MEMCACHE_SERVERS
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: SERVERS
+                name: system-memcache
+          - name: BACKEND_REDIS_URL
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: REDIS_STORAGE_URL
+                name: backend-redis
+          - name: APICAST_BACKEND_ROOT_ENDPOINT
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: route_endpoint
+                name: backend-listener
+          - name: BACKEND_ROUTE
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: route_endpoint
+                name: backend-listener
+          - name: SMTP_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                key: address
+                name: smtp
+          - name: SMTP_USER_NAME
+            valueFrom:
+              configMapKeyRef:
+                key: username
+                name: smtp
+          - name: SMTP_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                key: password
+                name: smtp
+          - name: SMTP_DOMAIN
+            valueFrom:
+              configMapKeyRef:
+                key: domain
+                name: smtp
+          - name: SMTP_PORT
+            valueFrom:
+              configMapKeyRef:
+                key: port
+                name: smtp
+          - name: SMTP_AUTHENTICATION
+            valueFrom:
+              configMapKeyRef:
+                key: authentication
+                name: smtp
+          - name: SMTP_OPENSSL_VERIFY_MODE
+            valueFrom:
+              configMapKeyRef:
+                key: openssl.verify.mode
+                name: smtp
+          - name: APICAST_ACCESS_TOKEN
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: ACCESS_TOKEN
+                name: system-master-apicast
+          - name: ZYNC_AUTHENTICATION_TOKEN
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: ZYNC_AUTHENTICATION_TOKEN
+                name: zync
+          - name: CONFIG_INTERNAL_API_USER
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: backend-internal-api
+          - name: CONFIG_INTERNAL_API_PASSWORD
+            value: null
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: backend-internal-api
+  template:
+    spec:
+      containers:
+      - name: system-master
+        env:
+        - name: AMP_RELEASE
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: AMP_RELEASE
+              name: system-environment
+        - name: APICAST_REGISTRY_URL
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: APICAST_REGISTRY_URL
+              name: system-environment
+        - name: FORCE_SSL
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: FORCE_SSL
+              name: system-environment
+        - name: PROVIDER_PLAN
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: PROVIDER_PLAN
+              name: system-environment
+        - name: RAILS_ENV
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: RAILS_ENV
+              name: system-environment
+        - name: RAILS_LOG_LEVEL
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: RAILS_LOG_LEVEL
+              name: system-environment
+        - name: RAILS_LOG_TO_STDOUT
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: RAILS_LOG_TO_STDOUT
+              name: system-environment
+        - name: SSL_CERT_DIR
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: SSL_CERT_DIR
+              name: system-environment
+        - name: THINKING_SPHINX_PORT
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: THINKING_SPHINX_PORT
+              name: system-environment
+        - name: THREESCALE_SANDBOX_PROXY_OPENSSL_VERIFY_MODE
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: THREESCALE_SANDBOX_PROXY_OPENSSL_VERIFY_MODE
+              name: system-environment
+        - name: THREESCALE_SUPERDOMAIN
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: THREESCALE_SUPERDOMAIN
+              name: system-environment
+        - name: DATABASE_URL
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: URL
+              name: system-database
+        - name: MASTER_DOMAIN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: MASTER_DOMAIN
+              name: system-seed
+        - name: MASTER_USER
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: MASTER_USER
+              name: system-seed
+        - name: MASTER_PASSWORD
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: MASTER_PASSWORD
+              name: system-seed
+        - name: ADMIN_ACCESS_TOKEN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_ACCESS_TOKEN
+              name: system-seed
+        - name: USER_LOGIN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_USER
+              name: system-seed
+        - name: USER_PASSWORD
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_PASSWORD
+              name: system-seed
+        - name: TENANT_NAME
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: TENANT_NAME
+              name: system-seed
+        - name: EVENTS_SHARED_SECRET
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: PASSWORD
+              name: system-events-hook
+        - name: RECAPTCHA_PUBLIC_KEY
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: PUBLIC_KEY
+              name: system-recaptcha
+        - name: RECAPTCHA_PRIVATE_KEY
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: PRIVATE_KEY
+              name: system-recaptcha
+        - name: SECRET_KEY_BASE
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: SECRET_KEY_BASE
+              name: system-app
+        - name: REDIS_URL
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: URL
+              name: system-redis
+        - name: MEMCACHE_SERVERS
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: SERVERS
+              name: system-memcache
+        - name: BACKEND_REDIS_URL
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_STORAGE_URL
+              name: backend-redis
+        - name: APICAST_BACKEND_ROOT_ENDPOINT
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: route_endpoint
+              name: backend-listener
+        - name: BACKEND_ROUTE
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: route_endpoint
+              name: backend-listener
+        - name: APICAST_ACCESS_TOKEN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ACCESS_TOKEN
+              name: system-master-apicast
+        - name: ZYNC_AUTHENTICATION_TOKEN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ZYNC_AUTHENTICATION_TOKEN
+              name: zync
+        - name: CONFIG_INTERNAL_API_USER
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: backend-internal-api
+        - name: CONFIG_INTERNAL_API_PASSWORD
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: backend-internal-api
+      - name: system-provider
+        env:
+        - name: AMP_RELEASE
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: AMP_RELEASE
+              name: system-environment
+        - name: APICAST_REGISTRY_URL
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: APICAST_REGISTRY_URL
+              name: system-environment
+        - name: FORCE_SSL
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: FORCE_SSL
+              name: system-environment
+        - name: PROVIDER_PLAN
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: PROVIDER_PLAN
+              name: system-environment
+        - name: RAILS_ENV
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: RAILS_ENV
+              name: system-environment
+        - name: RAILS_LOG_LEVEL
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: RAILS_LOG_LEVEL
+              name: system-environment
+        - name: RAILS_LOG_TO_STDOUT
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: RAILS_LOG_TO_STDOUT
+              name: system-environment
+        - name: SSL_CERT_DIR
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: SSL_CERT_DIR
+              name: system-environment
+        - name: THINKING_SPHINX_PORT
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: THINKING_SPHINX_PORT
+              name: system-environment
+        - name: THREESCALE_SANDBOX_PROXY_OPENSSL_VERIFY_MODE
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: THREESCALE_SANDBOX_PROXY_OPENSSL_VERIFY_MODE
+              name: system-environment
+        - name: THREESCALE_SUPERDOMAIN
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: THREESCALE_SUPERDOMAIN
+              name: system-environment
+        - name: DATABASE_URL
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: URL
+              name: system-database
+        - name: MASTER_DOMAIN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: MASTER_DOMAIN
+              name: system-seed
+        - name: MASTER_USER
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: MASTER_USER
+              name: system-seed
+        - name: MASTER_PASSWORD
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: MASTER_PASSWORD
+              name: system-seed
+        - name: ADMIN_ACCESS_TOKEN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_ACCESS_TOKEN
+              name: system-seed
+        - name: USER_LOGIN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_USER
+              name: system-seed
+        - name: USER_PASSWORD
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_PASSWORD
+              name: system-seed
+        - name: TENANT_NAME
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: TENANT_NAME
+              name: system-seed
+        - name: EVENTS_SHARED_SECRET
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: PASSWORD
+              name: system-events-hook
+        - name: RECAPTCHA_PUBLIC_KEY
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: PUBLIC_KEY
+              name: system-recaptcha
+        - name: RECAPTCHA_PRIVATE_KEY
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: PRIVATE_KEY
+              name: system-recaptcha
+        - name: SECRET_KEY_BASE
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: SECRET_KEY_BASE
+              name: system-app
+        - name: REDIS_URL
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: URL
+              name: system-redis
+        - name: MEMCACHE_SERVERS
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: SERVERS
+              name: system-memcache
+        - name: BACKEND_REDIS_URL
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_STORAGE_URL
+              name: backend-redis
+        - name: APICAST_BACKEND_ROOT_ENDPOINT
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: route_endpoint
+              name: backend-listener
+        - name: BACKEND_ROUTE
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: route_endpoint
+              name: backend-listener
+        - name: APICAST_ACCESS_TOKEN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ACCESS_TOKEN
+              name: system-master-apicast
+        - name: ZYNC_AUTHENTICATION_TOKEN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ZYNC_AUTHENTICATION_TOKEN
+              name: zync
+        - name: CONFIG_INTERNAL_API_USER
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: backend-internal-api
+        - name: CONFIG_INTERNAL_API_PASSWORD
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: backend-internal-api
+      - name: system-developer
+        env:
+        - name: AMP_RELEASE
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: AMP_RELEASE
+              name: system-environment
+        - name: APICAST_REGISTRY_URL
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: APICAST_REGISTRY_URL
+              name: system-environment
+        - name: FORCE_SSL
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: FORCE_SSL
+              name: system-environment
+        - name: PROVIDER_PLAN
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: PROVIDER_PLAN
+              name: system-environment
+        - name: RAILS_ENV
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: RAILS_ENV
+              name: system-environment
+        - name: RAILS_LOG_LEVEL
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: RAILS_LOG_LEVEL
+              name: system-environment
+        - name: RAILS_LOG_TO_STDOUT
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: RAILS_LOG_TO_STDOUT
+              name: system-environment
+        - name: SSL_CERT_DIR
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: SSL_CERT_DIR
+              name: system-environment
+        - name: THINKING_SPHINX_PORT
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: THINKING_SPHINX_PORT
+              name: system-environment
+        - name: THREESCALE_SANDBOX_PROXY_OPENSSL_VERIFY_MODE
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: THREESCALE_SANDBOX_PROXY_OPENSSL_VERIFY_MODE
+              name: system-environment
+        - name: THREESCALE_SUPERDOMAIN
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: THREESCALE_SUPERDOMAIN
+              name: system-environment
+        - name: DATABASE_URL
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: URL
+              name: system-database
+        - name: MASTER_DOMAIN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: MASTER_DOMAIN
+              name: system-seed
+        - name: MASTER_USER
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: MASTER_USER
+              name: system-seed
+        - name: MASTER_PASSWORD
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: MASTER_PASSWORD
+              name: system-seed
+        - name: ADMIN_ACCESS_TOKEN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_ACCESS_TOKEN
+              name: system-seed
+        - name: USER_LOGIN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_USER
+              name: system-seed
+        - name: USER_PASSWORD
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_PASSWORD
+              name: system-seed
+        - name: TENANT_NAME
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: TENANT_NAME
+              name: system-seed
+        - name: EVENTS_SHARED_SECRET
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: PASSWORD
+              name: system-events-hook
+        - name: RECAPTCHA_PUBLIC_KEY
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: PUBLIC_KEY
+              name: system-recaptcha
+        - name: RECAPTCHA_PRIVATE_KEY
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: PRIVATE_KEY
+              name: system-recaptcha
+        - name: SECRET_KEY_BASE
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: SECRET_KEY_BASE
+              name: system-app
+        - name: REDIS_URL
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: URL
+              name: system-redis
+        - name: MEMCACHE_SERVERS
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: SERVERS
+              name: system-memcache
+        - name: BACKEND_REDIS_URL
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_STORAGE_URL
+              name: backend-redis
+        - name: APICAST_BACKEND_ROOT_ENDPOINT
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: route_endpoint
+              name: backend-listener
+        - name: BACKEND_ROUTE
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: route_endpoint
+              name: backend-listener
+        - name: APICAST_ACCESS_TOKEN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ACCESS_TOKEN
+              name: system-master-apicast
+        - name: ZYNC_AUTHENTICATION_TOKEN
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: ZYNC_AUTHENTICATION_TOKEN
+              name: zync
+        - name: CONFIG_INTERNAL_API_USER
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: backend-internal-api
+        - name: CONFIG_INTERNAL_API_PASSWORD
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: backend-internal-api
+      volumes:
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: zync.yml
+            path: zync.yml
+          - key: rolling_updates.yml
+            path: rolling_updates.yml
+          - key: service_discovery.yml
+            path: service_discovery.yml
+          name: system
+        name: system-config

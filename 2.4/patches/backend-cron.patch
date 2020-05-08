@@ -1,0 +1,64 @@
+spec:
+  paused: true
+  template:
+    spec:
+      containers:
+      - name: backend-cron
+        env:
+        - name: CONFIG_REDIS_PROXY
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_STORAGE_URL
+              name: backend-redis
+        - name: CONFIG_REDIS_SENTINEL_HOSTS
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_STORAGE_SENTINEL_HOSTS
+              name: backend-redis
+        - name: CONFIG_REDIS_SENTINEL_ROLE
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_STORAGE_SENTINEL_ROLE
+              name: backend-redis
+        - name: CONFIG_QUEUES_MASTER_NAME
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_QUEUES_URL
+              name: backend-redis
+        - name: CONFIG_QUEUES_SENTINEL_HOSTS
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_QUEUES_SENTINEL_HOSTS
+              name: backend-redis
+        - name: CONFIG_QUEUES_SENTINEL_ROLE
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_QUEUES_SENTINEL_ROLE
+              name: backend-redis
+        - name: RACK_ENV
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: RACK_ENV
+              name: backend-environment
+      initContainers:
+      - name: backend-redis-svc
+        command:
+        - /opt/app/entrypoint.sh
+        - sh
+        - -c
+        - until rake connectivity:redis_storage_queue_check; do sleep $SLEEP_SECONDS;
+          done
+        env:
+        - name: CONFIG_QUEUES_MASTER_NAME
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_QUEUES_URL
+              name: backend-redis        

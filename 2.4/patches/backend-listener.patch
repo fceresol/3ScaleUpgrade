@@ -1,0 +1,61 @@
+spec:
+  paused: true
+  template:
+    spec:
+      containers:
+      - name: backend-listener
+        env:
+        - name: CONFIG_REDIS_PROXY
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_STORAGE_URL
+              name: backend-redis
+        - name: CONFIG_REDIS_SENTINEL_HOSTS
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_STORAGE_SENTINEL_HOSTS
+              name: backend-redis
+        - name: CONFIG_REDIS_SENTINEL_ROLE
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_STORAGE_SENTINEL_ROLE
+              name: backend-redis
+        - name: CONFIG_QUEUES_MASTER_NAME
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_QUEUES_URL
+              name: backend-redis
+        - name: CONFIG_QUEUES_SENTINEL_HOSTS
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_QUEUES_SENTINEL_HOSTS
+              name: backend-redis
+        - name: CONFIG_QUEUES_SENTINEL_ROLE
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: REDIS_QUEUES_SENTINEL_ROLE
+              name: backend-redis
+        - name: RACK_ENV
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: RACK_ENV
+              name: backend-environment
+        - name: CONFIG_INTERNAL_API_USER
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: backend-internal-api
+        - name: CONFIG_INTERNAL_API_PASSWORD
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: backend-internal-api

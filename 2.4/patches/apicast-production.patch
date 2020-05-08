@@ -1,0 +1,43 @@
+spec:
+  paused: true
+  template:
+    spec:
+      containers:
+      - name: "apicast-production"
+        env:
+        - name: THREESCALE_PORTAL_ENDPOINT
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: PROXY_CONFIGS_ENDPOINT
+              name: system-master-apicast
+        - name: BACKEND_ENDPOINT_OVERRIDE
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: service_endpoint
+              name: backend-listener
+        - name: APICAST_MANAGEMENT_API
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: APICAST_MANAGEMENT_API
+              name: apicast-environment
+        - name: OPENSSL_VERIFY
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: OPENSSL_VERIFY
+              name: apicast-environment
+        - name: APICAST_RESPONSE_CODES
+          value: null
+          valueFrom:
+            configMapKeyRef:
+              key: APICAST_RESPONSE_CODES
+              name: apicast-environment
+        - name: REDIS_URL
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: PRODUCTION_URL
+              name: apicast-redis

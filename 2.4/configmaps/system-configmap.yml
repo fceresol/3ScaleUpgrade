@@ -1,0 +1,54 @@
+apiVersion: v1
+data:
+  rolling_updates.yml: |
+    production:
+      old_charts: false
+      new_provider_documentation: false
+      proxy_pro: false
+      instant_bill_plan_change: false
+      service_permissions: true
+      async_apicast_deploy: false
+      duplicate_application_id: true
+      duplicate_user_key: true
+      plan_changes_wizard: false
+      require_cc_on_signup: false
+      apicast_per_service: true
+      new_notification_system: true
+      cms_api: false
+      apicast_v2: true
+      forum: false
+      published_service_plan_signup: true
+      apicast_oidc: true
+      policies: true
+      proxy_private_base_path: true
+  service_discovery.yml: |
+    production:
+      enabled: <%= cluster_token_file_exists = File.exists?(cluster_token_file_path = '/var/run/secrets/kubernetes.io/serviceaccount/token') %>
+      server_scheme: 'https'
+      server_host: 'kubernetes.default.svc.cluster.local'
+      server_port: 443
+      bearer_token: "<%= File.read(cluster_token_file_path) if cluster_token_file_exists %>"
+      authentication_method: service_account # can be service_account|oauth
+      oauth_server_type: builtin # can be builtin|rh_sso
+      client_id:
+      client_secret:
+      timeout: 1
+      open_timeout: 1
+      max_retry: 5
+      verify_ssl: <%= OpenSSL::SSL::VERIFY_NONE %> # 0
+  zync.yml: |
+    production:
+      endpoint: 'http://zync:8080'
+      authentication:
+        token: "<%= ENV.fetch('ZYNC_AUTHENTICATION_TOKEN') %>"
+      connect_timeout: 5
+      send_timeout: 5
+      receive_timeout: 10
+      root_url:
+kind: ConfigMap
+metadata:
+  labels:
+    3scale.component: system
+    app: 3scale-api-management
+  name: system
+

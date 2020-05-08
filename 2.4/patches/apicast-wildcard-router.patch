@@ -1,0 +1,13 @@
+spec:
+  paused: true
+  template:
+    spec:
+      containers:
+      - name: apicast-wildcard-router
+        env:
+        - name: API_HOST
+          value: null
+          valueFrom:
+            secretKeyRef:
+              key: BASE_URL
+              name: system-master-apicast
