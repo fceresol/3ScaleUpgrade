@@ -1,0 +1,11 @@
+spec:
+  template:
+    spec:
+      containers:
+      - name: system-sidekiq
+        env:
+        - name: USER_EMAIL
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_EMAIL
+              name: system-seed

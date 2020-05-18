@@ -2,12 +2,21 @@
 
 # common configurations:
 
+# OpenShift namespace where 3Scale resides
 OPENSHIFT_NAMESPACE=3scale-upgrade
+
+# OpenShift credentials (used only if LOGIN_ENABLED is true)
 OPENSHIFT_USERNAME=admin
 OPENSHIFT_PASSWORD=admin
 
+# Enables / disables login
+LOGIN_ENABLED=false
+
+# Fail on error, if true any error stops the procedure (even if a Secret already exists and DELETE_SECRET is false)
 FAIL_ON_ERROR=false
-DELETE_SECRET=true
+
+# If true and the secret to be created already exists, it will be deleted before creating the new one. If false the secret creation will fail.
+DELETE_SECRET=false
 
 SECRET_ITEMS=()
 
@@ -128,14 +137,18 @@ getSecretItems()
     SECRET_ITEMS=("${literals[@]}")
 }
 
-log INFO 0 "login"
+if [ "${LOGIN_ENABLED}" == "true" ] ; then
+    log INFO 0 "login"
 
-cmdOut=$(oc login -u ${OPENSHIFT_USERNAME} -p ${OPENSHIFT_PASSWORD})
+    cmdOut=$(oc login -u ${OPENSHIFT_USERNAME} -p ${OPENSHIFT_PASSWORD})
 
-if [ $? -ne 0 ] ; then
-    log ERROR 0 "login FAILED"
-    log ERROR 0 "${cmdOut}"
-    exit 4
+    if [ $? -ne 0 ] ; then
+        log ERROR 0 "login FAILED"
+        log ERROR 0 "${cmdOut}"
+        exit 4
+    fi
+else
+    log INFO 0 "login skipped"
 fi
 
 DEPLOYED_APP_LABEL=$(oc get dc backend-listener -o json | jq .spec.template.metadata.labels.app -r)

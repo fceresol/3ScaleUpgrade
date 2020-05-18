@@ -2,12 +2,21 @@
 
 # common configurations:
 
+# OpenShift namespace where 3Scale resides
 OPENSHIFT_NAMESPACE=3scale-upgrade
+
+# OpenShift credentials (used only if LOGIN_ENABLED is true)
 OPENSHIFT_USERNAME=admin
 OPENSHIFT_PASSWORD=admin
 
+# Enables / disables login
+LOGIN_ENABLED=false
+
+# Fail on error, if true any error stops the procedure (even if a ConfigMap already exists and DELETE_CONFIG_MAP is false)
 FAIL_ON_ERROR=false
-DELETE_CONFIGMAP=true
+
+# If true and the config map to be created already exists, it will be deleted before creating the new one. If false the configmap creation will fail.
+DELETE_CONFIGMAP=false
 
 CONFIGMAP_ITEMS=()
 
@@ -73,7 +82,7 @@ createConfigMap()
     #### check if the configMap is present
     log INFO 0 "check if the configMap already exists"
     
-    oc get secret ${configMapName} -n ${OPENSHIFT_NAMESPACE} >/dev/null 2>&1
+    oc get cm ${configMapName} -n ${OPENSHIFT_NAMESPACE} >/dev/null 2>&1
 
     if [ $? -eq 0 ] ; then
         if [ ${DELETE_CONFIGMAP} == true ] ; then
@@ -128,14 +137,18 @@ getConfigMapItems()
     CONFIGMAP_ITEMS=("${literals[@]}")
 }
 
-log INFO 0 "login"
+if [ "${LOGIN_ENABLED}" == "true" ] ; then
+    log INFO 0 "login"
 
-cmdOut=$(oc login -u ${OPENSHIFT_USERNAME} -p ${OPENSHIFT_PASSWORD})
+    cmdOut=$(oc login -u ${OPENSHIFT_USERNAME} -p ${OPENSHIFT_PASSWORD})
 
-if [ $? -ne 0 ] ; then
-    log ERROR 0 "login FAILED"
-    log ERROR 0 "${cmdOut}"
-    exit 4
+    if [ $? -ne 0 ] ; then
+        log ERROR 0 "login FAILED"
+        log ERROR 0 "${cmdOut}"
+        exit 4
+    fi
+else
+    log INFO 0 "login skipped"
 fi
 
 DEPLOYED_APP_LABEL=$(oc get dc backend-listener -o json | jq .spec.template.metadata.labels.app -r)

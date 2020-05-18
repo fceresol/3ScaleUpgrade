@@ -1,0 +1,38 @@
+spec:
+  paused: true
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      pre:
+        execNewPod:
+          env:
+          - name: USER_EMAIL
+            valueFrom:
+              secretKeyRef:
+                key: ADMIN_EMAIL
+                name: system-seed
+  template:
+    spec:
+      containers:
+      - name: system-master
+        env:
+        - name: USER_EMAIL
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_EMAIL
+              name: system-seed
+      - name: system-provider
+        env:
+        - name: USER_EMAIL
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_EMAIL
+              name: system-seed
+      - name: system-developer
+        env:
+        - name: USER_EMAIL
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_EMAIL
+              name: system-seed
